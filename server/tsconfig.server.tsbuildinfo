@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/routes/spam.ts","./src/spam/normalizetext.ts","./src/spam/scorer.ts","./src/types/global.d.ts","./src/types/natural-internals.d.ts","./src/types/scorer.ts","./src/types/spam-route.ts","./src/spam/data.json"],"version":"5.8.3"}
