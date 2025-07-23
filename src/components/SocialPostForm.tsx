@@ -38,14 +38,17 @@ const SocialPostForm = forwardRef<SocialPostFormHandle, Props>(
             );
         };
 
+        const canSubmit = text.trim().length > 0 && platforms.length > 0;
+
         const handleSubmit = async (e: React.FormEvent) => {
             e.preventDefault();
-            await onSubmit({ text, platforms });
+            if (!canSubmit) return;
+            await onSubmit({ text: text.trim(), platforms });
         };
 
         return (
             <form onSubmit={handleSubmit} className="mb-4">
-                {/* icons row */}
+
                 <div className="d-flex justify-content-end gap-2 mb-2">
                     {([
                         ['facebook', <FaFacebookF />],
@@ -66,7 +69,6 @@ const SocialPostForm = forwardRef<SocialPostFormHandle, Props>(
                     ))}
                 </div>
 
-                {/* textarea */}
                 <div className="mb-2">
                     <textarea
                         ref={textareaRef}
@@ -78,14 +80,13 @@ const SocialPostForm = forwardRef<SocialPostFormHandle, Props>(
                     />
                 </div>
 
-                {/* buttons */}
                 <div className="d-flex justify-content-end gap-2">
                     {onCancel && (
                         <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>
                             Cancel
                         </button>
                     )}
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary" disabled={!canSubmit}>
                         Submit
                     </button>
                 </div>
