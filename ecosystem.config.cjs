@@ -1,15 +1,20 @@
+// ecosystem.config.cjs
 module.exports = {
   apps: [
     {
       name: 'TextGuard',
-      script: './server/dist/index.js',
       cwd: '/var/www/textguard.chrishacia.com',
-      env: {
-        NODE_ENV: 'production'
-      },
-      watch: false,
+      script: 'server/dist/index.js',
       instances: 1,
-      exec_mode: 'fork'
+      exec_mode: 'fork',
+      watch: false,
+      env: {
+        NODE_ENV: 'production',
+        ROLLUP_DISABLE_NATIVE: '1',
+        SERVER_PROTOCOL: 'http',
+        SERVER_DOMAIN: 'textguard.chrishacia.com',
+        SERVER_PORT: '4052'
+      }
     }
   ]
 };
