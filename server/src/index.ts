@@ -1,12 +1,8 @@
+import 'dotenv/config';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import spamRouter from './routes/spam';
-import dotenv from 'dotenv';
-
-dotenv.config({
-  path: path.join(__dirname, '../../.env')
-});
 
 const app = express();
 

@@ -1,14 +1,8 @@
-import path from "path";
 import type { DataItem, Classification, SpamResult } from "../types/scorer";
 import { normalizeText } from "./normalizeText";
 import dataset from "./data.json";
-import dotenv from "dotenv";
 import badWordsModule = require("bad-words");
 import BayesClassifierMod = require("natural/lib/natural/classifiers/bayes_classifier");
-
-dotenv.config({
-  path: path.join(__dirname, "../../../.env"),
-});
 
 const HEURISTIC_WEIGHT = Number(process.env.SPAM_HEURISTIC_WEIGHT ?? 0.5);
 const THRESHOLD = Number(process.env.SPAM_THRESHOLD ?? 0.6);

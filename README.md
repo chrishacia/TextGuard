@@ -40,8 +40,8 @@ Create a `.env` in the project root:
 
 ```bash
 PORT=4000
-SPAM_HEURISTIC_WEIGHT=0.5
-SPAM_THRESHOLD=0.6
+SPAM_HEURISTIC_WEIGHT=0.3
+SPAM_THRESHOLD=0.5
 SERVER_DOMAIN=textguard.chrishacia.com
 SERVER_PROTOCOL=https
 ```
