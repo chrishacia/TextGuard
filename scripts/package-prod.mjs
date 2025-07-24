@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 // if this isn't working remember to chmod +x scripts/package-prod.mjs
+// file intended for local use to build production package for TextGuard server
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
