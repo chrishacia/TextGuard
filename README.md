@@ -1,26 +1,32 @@
 # TextGuard
 
+![TextGuard Screenshot](TextGuard-screenshot.png)
+
+**Live Demo:** <https://textguard.chrishacia.com>
+
 A tiny spam detection demo built with **TypeScript**, **React (Vite)**, and **Express**.
 No LLMs—just heuristics + a Naive Bayes classifier trained on a small labeled dataset.
 
-> This was created as a personal learning exercise and doubles as an assessment piece for a potential job.
+> Created as a personal learning exercise and assessment for a potential job.
 
 ## Features
 
 - **Client**
   - Textarea posting UI with platform icon toggles (Facebook, X/Twitter, LinkedIn, Instagram)
+  - Submit button enabled only when text and a platform are selected
   - Result banner (spam / not spam)
   - History list with filter (“All / Spam / Not Spam”), bulk delete, accordion details
-  - Responsive navbar using React state (no Bootstrap JS)
-
+  - Responsive navbar (no Bootstrap JS)
 - **Server**
   - `/api/score` accepts `{ text, platforms }`
-  - Normalizes text, applies heuristics (links/!, profanity), Naive Bayes probabilities
+  - Normalizes text, applies heuristics (links, exclamations, profanity), Naive Bayes probability
   - Returns `{ score, isSpam, platforms }`
 
-## Quick Start (Dev)
+## Quick Start (Development)
 
 ```bash
+git clone git@github.com:chrishacia/TextGuard.git
+cd TextGuard
 npm install
 npm run dev
 ```
@@ -30,57 +36,111 @@ npm run dev
 
 ## Environment Variables
 
-Create a `.env` (root or `server/` depending on your setup):
+Create a `.env` in the project root:
 
-```
+```bash
 PORT=4000
 SPAM_HEURISTIC_WEIGHT=0.5
 SPAM_THRESHOLD=0.6
+SERVER_DOMAIN=textguard.chrishacia.com
+SERVER_PROTOCOL=https
 ```
 
-All have defaults; set them if you want to tweak scoring.
+All have sensible defaults—tweak as desired.
 
-## Build & Run (Monolithic Prod)
+## Build & Run (Production)
 
 ```bash
-npm run build     # build client + server, copy client into server/dist/public
-npm start         # starts Express on PORT (default 4000)
+npm install
+npm run build       # Builds client and server, copies client output into server/dist/public
+npm start           # Starts Express on PORT (default 4000)
 ```
 
-Open <http://localhost:4000>.
+Or with PM2:
 
-### Deploy Manually
+```bash
+pm2 start ecosystem.config.cjs --env production
+```
 
-1. Push repo.
-2. On your host (Render/Railway/Heroku/etc):
-   - Build Command: `npm run build`
-   - Start Command: `npm start`
-3. Set environment variables if needed.
+## Manual Deploy (Ubuntu / PM2 / Nginx)
+
+1. **Clone & Install**
+
+   ```bash
+   cd /var/www
+   git clone git@github.com:chrishacia/TextGuard.git textguard.chrishacia.com
+   cd textguard.chrishacia.com
+   npm ci --workspaces
+   ```
+
+2. **Build**
+
+   ```bash
+   npm run build
+   ```
+
+3. **Start with PM2**
+
+   ```bash
+   pm2 start ecosystem.config.cjs --env production
+   ```
+
+4. **Configure Nginx**
+   - Redirect HTTP → HTTPS
+   - Proxy `textguard.chrishacia.com` to `http://127.0.0.1:4000`
+   - Serve client via Express
+
+5. **Enable SSL**
+
+   ```bash
+   certbot --nginx -d textguard.chrishacia.com
+   ```
+
+---
+
+### Sample Nginx Server Block
+
+```nginx
+server {
+    listen 80;
+    server_name textguard.chrishacia.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name textguard.chrishacia.com;
+
+    ssl_certificate /etc/letsencrypt/live/textguard.chrishacia.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/textguard.chrishacia.com/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+    }
+}
+```
 
 ## Project Structure
 
 ```
-root
-├─ client/                # React/Vite app (adjust if your client lives in /src)
+/
+├─ dist/                   # Built client (Vite)
 ├─ server/
-│  ├─ src/
-│  └─ dist/               # built output
-├─ scripts/
-│  └─ postbuild.cjs
+│  ├─ dist/                # Built server
+│  └─ src/                 # Server source
+├─ scripts/                # Deployment scripts
 ├─ package.json
+├─ ecosystem.config.cjs
+├─ .env
 └─ README.md
 ```
 
-*(Adjust paths/details based on your actual layout.)*
+## License
 
-## Future Ideas
-
-- More data + smarter features (n-grams, char-grams)
-- Unit tests (scorer + UI)
-- CI pipeline
-- Threshold slider in UI, dark mode
-
----
-
-MIT (or your license of choice)
-© Christopher Hacia
+MIT © Christopher Hacia <https://chrishacia.com>
