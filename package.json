@@ -17,7 +17,8 @@
         "server:start": "npm run start --prefix server",
         "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
         "build": "npm run client:build && npm run server:build && npm run copy:client",
-        "start": "npm run server:start"
+        "start": "npm run server:start",
+        "test:indexable": "node scripts/check-indexable.mjs"
     },
     "dependencies": {
         "bootstrap": "5.3.7",
