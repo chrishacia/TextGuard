@@ -14,6 +14,14 @@ app.use('/api/score', spamRouter);
 app.get('/api/alive', (_req, res) => res.json({ ok: true }));
 
 const publicDir = path.resolve(__dirname, 'public');
+app.get('/sitemap.xml', (_req, res) => {
+  res.type('application/xml');
+  res.sendFile(path.join(publicDir, 'sitemap.xml'));
+});
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain');
+  res.sendFile(path.join(publicDir, 'robots.txt'));
+});
 app.use(express.static(publicDir));
 
 app.use((req, res, next) => {
