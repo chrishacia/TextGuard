@@ -141,6 +141,8 @@ server {
 └─ README.md
 ```
 
+The production site is indexable: `public/robots.txt` (Allow + Sitemap line) and `public/sitemap.xml` live in `public/` and are served by Express before the SPA fallback.
+
 ## License
 
 MIT © Christopher Hacia <https://chrishacia.com>

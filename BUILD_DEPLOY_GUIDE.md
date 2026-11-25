@@ -86,6 +86,7 @@ From your browser:
 ```
 https://textguard.chrishacia.com
 ```
+The production site is indexable: `public/robots.txt` (Allow + Sitemap line) and `public/sitemap.xml` are served by Express before the SPA fallback (verify with `node scripts/check-indexable.mjs`).
 
 ---
 
